@@ -1,8 +1,14 @@
-import { useState } from 'react'
-import { useAddTransaction } from '../../hooks/useAddTransaction.js'
+import { useState } from 'react';
+import { useAddTransaction } from '../../hooks/useAddTransaction.js';
+import { useGetTransactions } from '../../hooks/useGetTransactions.js';
+import { useGetUserInfo } from '../../hooks/useGetUserInfo.js';
+
+import "./styles.css";
 
 export const ExpenseTracker = () => {
   const { addTransaction } = useAddTransaction();
+  const { transactions } = useGetTransactions();
+  const { name, profilePhoto } = useGetUserInfo();
 
   const [description, setDescription] = useState("");
   const [transactionAmount, setTransactionAmount] = useState(0);
@@ -22,57 +28,83 @@ export const ExpenseTracker = () => {
     <>
       <div className="expense-tracker">
         <div className="container">
-            <h1> Expense Tracker</h1>
-            <div className="balance">
-                <h3>Your Balance</h3>
-                <h2>£0.00</h2>
-            </div>
-            <div className="summary">
-                <div className="income"></div>
-                <h3>Income</h3>
-                <h2>£0.00</h2>
-                <div className="expenses"></div>
-                <h3>Expenses</h3>
-                <h2>£0.00</h2>
-            </div>
-            <form className="add-transaction" onSubmit={onSubmit}>
-                <input 
-                  type="text" 
-                  placeholder="Description" 
-                  required 
-                  onChange={(e) => setDescription(e.target.value)} 
-                />
+          <h1> {name}'s Expense Tracker</h1>
+          <div className="balance">
+              <h3> Your Balance</h3>
+              <h2>£0.00</h2>
+          </div>
+          <div className="summary">
+              <div className="income"></div>
+              <h3>Income</h3>
+              <h2>£0.00</h2>
+              <div className="expenses"></div>
+              <h3>Expenses</h3>
+              <h2>£0.00</h2>
+          </div>
+          <form className="add-transaction" onSubmit={onSubmit}>
+              <input 
+                type="text" 
+                placeholder="Description" 
+                required 
+                onChange={(e) => setDescription(e.target.value)} 
+              />
+              <input 
+                type="number" 
+                placeholder="Amount" 
+                required 
+                onChange={(e) => setTransactionAmount(e.target.value)}
+              />
+              <input 
+                type="radio" 
+                id="expense" 
+                value="expense" 
+                checked={transactionType === "expense"}
+                onChange={(e) => setTransactionType(e.target.value)}
+              />
+              <label htmlFor="expense"> Expense</label>
+              <input 
+                type="radio" 
+                id="income" 
+                value="income" 
+                checked={transactionType === "income"}
+                onChange={(e) => setTransactionType(e.target.value)}
+              />
+              <label htmlFor="income"> Income</label>
 
-                <input 
-                  type="number" 
-                  placeholder="Amount" 
-                  required 
-                  onChange={(e) => setTransactionAmount(e.target.value)}
-                />
-                <input 
-                  type="radio" 
-                  id="expense" 
-                  value="expense" 
-                  checked={transactionType === "expense"}
-                  onChange={(e) => setTransactionType(e.target.value)}
-                />
-                <label htmlFor="expense"> Expense</label>
-                <input 
-                  type="radio" 
-                  id="income" 
-                  value="income" 
-                  checked={transactionType === "income"}
-                  onChange={(e) => setTransactionType(e.target.value)}
-                />
-                <label htmlFor="income"> Income</label>
-
-                <button type="submit">Add Transaction</button>
-            </form>
+              <button type="submit"> Add Transaction</button>
+          </form>
         </div>
+        {profilePhoto && (
+          <div className="profile">
+            {" "}
+            <img className="profile-photo" src={profilePhoto} />
+          </div>
+        )}
       </div>
-      <div>
-          <div className="transactions"></div>
-          <h3>Transactions</h3>
+      <div className="transactions">
+        <h3> Transactions</h3>
+        <ul>
+          {transactions.map(transaction => {
+            const { description, transactionAmount, transactionType } = 
+              transaction;
+            return (
+              <li>
+                <h4> {description} </h4>
+                <p>
+                  £{transactionAmount} •{""}
+                  <label 
+                    style={{
+                      color: transactionType === "expense" ? "red" : "green",
+                      }}
+                  > 
+                    {" "}
+                    {transactionType}{" "} 
+                  </label>
+                </p>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </>
   );

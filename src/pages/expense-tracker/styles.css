@@ -1,0 +1,64 @@
+h1 {
+  color: rgb(236, 21, 215);
+}
+
+.expense-tracker {
+  width: 100vw;
+  display: flex;
+  flex-direction: column; /* Change flex direction to column */
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.expense-tracker h1 {
+  font-size: 40px;
+}
+
+.expense-tracker button {
+  margin-left: 10px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; /* Remove margin-left and adjust margin-top */
+}
+
+.profile-photo {
+  width: 200px;
+  border-radius: 50%;
+}
+
+.sign-out-button {
+  border: none;
+  margin-top: 50px;
+  width: 150px;
+  background: #3498db;
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.sign-out-button:hover {
+  background: #3cb0fd;
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.transactions {
+  margin: auto; /* Center horizontally and vertically */
+  margin-top: 20px;
+  padding-left: 10px;
+  width: 600px;
+  height: 400px;
+  overflow: auto;
+  border: 2px solid rgb(236, 21, 215);
+  text-align: center; /* Center text content within transactions */
+}
