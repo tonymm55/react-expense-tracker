@@ -10,13 +10,15 @@ import { auth } from "../../config/firebase-config";
 
 export const ExpenseTracker = () => {
   const { addTransaction } = useAddTransaction();
-  const { transactions } = useGetTransactions();
+  const { transactions, transactionTotals } = useGetTransactions();
   const { name, profilePhoto } = useGetUserInfo();
   const navigate = useNavigate();
 
   const [description, setDescription] = useState("");
-  const [transactionAmount, setTransactionAmount] = useState(0);
+  const [transactionAmount, setTransactionAmount] = useState("");
   const [transactionType, setTransactionType] = useState("expense");
+
+  const { balance, income, expenses } = transactionTotals;
 
 
   const onSubmit = (e) => {
@@ -26,6 +28,9 @@ export const ExpenseTracker = () => {
         transactionAmount, 
         transactionType,
     });
+
+    setDescription("")
+    setTransactionAmount("");
   };
 
   const signUserOut = async () => {
@@ -45,26 +50,28 @@ export const ExpenseTracker = () => {
           <h1> {name}'s Expense Tracker</h1>
           <div className="balance">
               <h3> Your Balance</h3>
-              <h2>£0.00</h2>
+              {balance >=0 ? <h2> £{balance}</h2> : <h2> -£{balance * -1}</h2>}
           </div>
           <div className="summary">
               <div className="income"></div>
               <h3>Income</h3>
-              <h2>£0.00</h2>
+              <h2>£{income}</h2>
               <div className="expenses"></div>
               <h3>Expenses</h3>
-              <h2>£0.00</h2>
+              <h2>£{expenses}</h2>
           </div>
           <form className="add-transaction" onSubmit={onSubmit}>
               <input 
                 type="text" 
                 placeholder="Description" 
+                value={description}
                 required 
                 onChange={(e) => setDescription(e.target.value)} 
               />
               <input 
                 type="number" 
-                placeholder="Amount" 
+                placeholder='Amount'
+                value={transactionAmount}
                 required 
                 onChange={(e) => setTransactionAmount(e.target.value)}
               />
