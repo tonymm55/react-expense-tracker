@@ -1,14 +1,18 @@
 import { useState } from 'react';
+import { signOut } from 'firebase/auth';
 import { useAddTransaction } from '../../hooks/useAddTransaction.js';
 import { useGetTransactions } from '../../hooks/useGetTransactions.js';
 import { useGetUserInfo } from '../../hooks/useGetUserInfo.js';
+import { useNavigate } from 'react-router-dom'; 
 
 import "./styles.css";
+import { auth } from "../../config/firebase-config";
 
 export const ExpenseTracker = () => {
   const { addTransaction } = useAddTransaction();
   const { transactions } = useGetTransactions();
   const { name, profilePhoto } = useGetUserInfo();
+  const navigate = useNavigate();
 
   const [description, setDescription] = useState("");
   const [transactionAmount, setTransactionAmount] = useState(0);
@@ -22,6 +26,16 @@ export const ExpenseTracker = () => {
         transactionAmount, 
         transactionType,
     });
+  };
+
+  const signUserOut = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      navigate("/")
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -78,6 +92,9 @@ export const ExpenseTracker = () => {
           <div className="profile">
             {" "}
             <img className="profile-photo" src={profilePhoto} />
+            <button className="sign-out-button" onClick={signUserOut}>
+              Sign Out
+            </button>
           </div>
         )}
       </div>
@@ -88,7 +105,7 @@ export const ExpenseTracker = () => {
             const { description, transactionAmount, transactionType } = 
               transaction;
             return (
-              <li>
+              <li key={transaction.id}>
                 <h4> {description} </h4>
                 <p>
                   £{transactionAmount} •{""}
